@@ -1,0 +1,13 @@
+.env
+*.sqlite3
+*.db
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+uploads/*
+!uploads/.gitkeep
+processed/*
+!processed/.gitkeep
+credentials/
+*service-account*.json

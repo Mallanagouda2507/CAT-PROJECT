@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f6f8fc">
+    <meta name="description" content="AI-powered invoice and document processing with Google Cloud Document AI.">
+    <title>DocuMind — Smart Document Processing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/style.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <a class="brand" href="#" aria-label="DocuMind home">
+          <span class="brand-mark"><i data-lucide="scan-text"></i></span>
+          <span class="brand-name">documind<span class="brand-dot">.</span><small>DOCUMENT INTELLIGENCE</small></span>
+        </a>
+        <div class="nav-label">WORKSPACE</div>
+        <nav class="primary-nav" aria-label="Main navigation">
+          <button class="nav-item active" data-view="dashboard"><i data-lucide="layout-dashboard"></i><span>Overview</span></button>
+          <button class="nav-item" data-view="documents"><i data-lucide="files"></i><span>Documents</span><span class="nav-count" id="nav-count">0</span></button>
+          <button class="nav-item" data-view="analytics"><i data-lucide="chart-no-axes-column-increasing"></i><span>Analytics</span></button>
+        </nav>
+        <div class="sidebar-bottom">
+          <div class="cloud-mini">
+            <div class="cloud-mini-icon"><i data-lucide="cloud"></i></div>
+            <strong>Google Cloud Document AI</strong>
+            <p id="sidebar-cloud-copy">Google Document AI status is being checked.</p>
+            <span class="connection-state"><span class="state-dot"></span><span id="sidebar-cloud-state">Checking connection</span></span>
+          </div>
+          <button class="nav-item" data-view="integration"><i data-lucide="workflow"></i><span>Cloud AI integration</span></button>
+          <div class="profile">
+            <div class="avatar">DM</div>
+            <div><strong>Document workspace</strong><small>Local project</small></div>
+            <i data-lucide="more-horizontal"></i>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <button class="mobile-menu icon-button" id="mobile-menu" aria-label="Open menu"><i data-lucide="menu"></i></button>
+          <div class="breadcrumbs"><span>Workspace</span><i data-lucide="chevron-right"></i><strong id="breadcrumb-current">Overview</strong></div>
+          <div class="topbar-actions">
+            <span class="topbar-date" id="current-date"></span>
+            <button class="icon-button" id="refresh-button" aria-label="Refresh dashboard" title="Refresh"><i data-lucide="rotate-cw"></i></button>
+            <button class="button button-primary button-small" data-open-upload><i data-lucide="plus"></i> Process document</button>
+          </div>
+        </header>
+
+        <section class="view active" id="view-dashboard">
+          <div class="page-heading">
+            <div><div class="eyebrow">YOUR DOCUMENT WORKSPACE</div><h1>Good work starts with clarity.</h1><p>Turn documents into structured, actionable data with AI.</p></div>
+            <button class="button button-primary" data-open-upload><i data-lucide="upload"></i> Upload a document</button>
+          </div>
+          <div class="notice notice-warning hidden" id="cloud-warning" role="status">
+            <span class="notice-icon"><i data-lucide="cloud-off"></i></span>
+            <div><strong>Google Cloud Document AI is not configured</strong><p>Configure a Google Cloud processor to use Document AI. OCR.space is a separate processing integration.</p></div>
+            <button class="text-button" data-navigate="integration">Setup guide <i data-lucide="arrow-up-right"></i></button>
+          </div>
+          <div class="stat-grid">
+            <article class="stat-card"><div class="stat-top"><span>Total documents</span><span class="stat-icon icon-blue"><i data-lucide="files"></i></span></div><div class="stat-value" id="stat-total">—</div><div class="stat-foot"><span>All processing attempts</span></div></article>
+            <article class="stat-card"><div class="stat-top"><span>Successful extractions</span><span class="stat-icon icon-green"><i data-lucide="circle-check"></i></span></div><div class="stat-value" id="stat-success">—</div><div class="stat-foot"><span>Returned by configured OCR service</span></div></article>
+            <article class="stat-card"><div class="stat-top"><span>Success rate</span><span class="stat-icon icon-violet"><i data-lucide="chart-no-axes-combined"></i></span></div><div class="stat-value" id="stat-rate">—<small>%</small></div><div class="stat-foot"><span>Successful / all attempts</span></div></article>
+            <article class="stat-card"><div class="stat-top"><span>Failed attempts</span><span class="stat-icon icon-amber"><i data-lucide="circle-alert"></i></span></div><div class="stat-value" id="stat-failed">—</div><div class="stat-foot"><span>Includes configuration errors</span></div></article>
+          </div>
+          <div class="dashboard-grid">
+            <article class="panel activity-panel">
+              <div class="panel-heading"><div><h2>Processing activity</h2><p>Documents processed over the last 7 days</p></div><span class="soft-badge"><span class="state-dot"></span> Last 7 days</span></div>
+              <div class="chart-wrap"><canvas id="activity-chart" aria-label="Daily document processing chart"></canvas><div class="empty-chart hidden" id="chart-empty">Activity will appear here after you process a document.</div></div>
+            </article>
+            <article class="panel quick-panel">
+              <div class="panel-heading"><div><h2>Quick start</h2><p>Let AI take care of the busywork</p></div><span class="quick-icon"><i data-lucide="sparkles"></i></span></div>
+              <div class="quick-drop" id="quick-drop">
+                <span class="quick-upload-icon"><i data-lucide="file-up"></i></span>
+                <strong>Ready to process a document?</strong>
+                <span>Upload an invoice PDF or image to get started.</span>
+                <button class="button button-secondary button-small" data-open-upload>Choose a file</button>
+              </div>
+              <div class="quick-formats"><span>SUPPORTED FORMATS</span><div><b>PDF</b><b>PNG</b><b>JPG</b><small>Up to 15 MB</small></div></div>
+            </article>
+          </div>
+          <article class="panel recent-panel">
+            <div class="panel-heading"><div><h2>Recent documents</h2><p>Your latest processing activity</p></div><button class="text-button" data-navigate="documents">View all documents <i data-lucide="arrow-right"></i></button></div>
+            <div class="table-scroll"><table><thead><tr><th>DOCUMENT</th><th>TYPE</th><th>DATE ADDED</th><th>STATUS</th><th></th></tr></thead><tbody id="recent-table"></tbody></table></div>
+            <div class="empty-state hidden" id="recent-empty"><span class="empty-icon"><i data-lucide="files"></i></span><strong>No documents yet</strong><p>Upload an invoice to see your processing history here.</p><button class="button button-secondary button-small" data-open-upload>Upload your first document</button></div>
+          </article>
+        </section>
+
+        <section class="view" id="view-documents">
+          <div class="page-heading"><div><div class="eyebrow">DOCUMENT LIBRARY</div><h1>Documents</h1><p>Review processing results and manage your document history.</p></div><button class="button button-primary" data-open-upload><i data-lucide="upload"></i> Upload document</button></div>
+          <article class="panel history-panel">
+            <div class="panel-heading history-heading"><div><h2>All documents <span class="inline-count" id="history-count">0</span></h2><p>Documents uploaded to this workspace</p></div><label class="search-box"><i data-lucide="search"></i><input id="history-search" type="search" placeholder="Search documents..." aria-label="Search documents"></label></div>
+            <div class="table-scroll"><table><thead><tr><th>DOCUMENT</th><th>TYPE</th><th>DATE ADDED</th><th>FILE SIZE</th><th>STATUS</th><th></th></tr></thead><tbody id="history-table"></tbody></table></div>
+            <div class="empty-state hidden" id="history-empty"><span class="empty-icon"><i data-lucide="folder-open"></i></span><strong>No documents found</strong><p>Your uploaded documents and processing attempts will show up here.</p></div>
+          </article>
+        </section>
+
+        <section class="view" id="view-analytics">
+          <div class="page-heading"><div><div class="eyebrow">WORKSPACE INSIGHTS</div><h1>Analytics</h1><p>Understand document volume and extraction outcomes.</p></div><button class="button button-secondary" id="analytics-refresh"><i data-lucide="rotate-cw"></i> Refresh data</button></div>
+          <div class="stat-grid analytics-stats">
+            <article class="stat-card"><div class="stat-top"><span>Total processed</span><span class="stat-icon icon-blue"><i data-lucide="files"></i></span></div><div class="stat-value" id="analytics-total">—</div><div class="stat-foot"><span>Recorded uploads</span></div></article>
+            <article class="stat-card"><div class="stat-top"><span>Extraction success</span><span class="stat-icon icon-green"><i data-lucide="badge-check"></i></span></div><div class="stat-value" id="analytics-rate">—<small>%</small></div><div class="stat-foot"><span>Successful / all attempts</span></div></article>
+            <article class="stat-card"><div class="stat-top"><span>Successful</span><span class="stat-icon icon-violet"><i data-lucide="circle-check"></i></span></div><div class="stat-value" id="analytics-success">—</div><div class="stat-foot"><span>Returned by configured OCR service</span></div></article>
+            <article class="stat-card"><div class="stat-top"><span>Needs attention</span><span class="stat-icon icon-amber"><i data-lucide="triangle-alert"></i></span></div><div class="stat-value" id="analytics-failed">—</div><div class="stat-foot"><span>Failed processing attempts</span></div></article>
+          </div>
+          <div class="dashboard-grid analytics-grid">
+            <article class="panel"><div class="panel-heading"><div><h2>Daily volume</h2><p>Uploads by day for the last 7 days</p></div></div><div class="chart-wrap chart-wrap-large"><canvas id="analytics-chart" aria-label="Daily upload volume chart"></canvas><div class="empty-chart hidden" id="analytics-chart-empty">No processing activity yet.</div></div></article>
+            <article class="panel"><div class="panel-heading"><div><h2>Documents by type</h2><p>Upload distribution in this workspace</p></div></div><div class="type-breakdown" id="type-breakdown"></div></article>
+          </div>
+          <article class="panel recent-panel"><div class="panel-heading"><div><h2>Recent activity</h2><p>Latest document processing attempts</p></div></div><div class="table-scroll"><table><thead><tr><th>DOCUMENT</th><th>TYPE</th><th>DATE ADDED</th><th>STATUS</th><th></th></tr></thead><tbody id="analytics-recent"></tbody></table></div><div class="empty-state hidden" id="analytics-empty"><strong>No activity yet</strong><p>Activity will appear after your first upload.</p></div></article>
+        </section>
+
+        <section class="view" id="view-integration">
+          <div class="page-heading"><div><div class="eyebrow">CLOUD ARCHITECTURE</div><h1>Cloud AI integration</h1><p>How a document moves from your browser to structured data.</p></div><span class="integration-status" id="integration-status"><span class="state-dot"></span><span>Checking setup</span></span></div>
+          <article class="panel architecture-panel">
+            <div class="architecture-flow">
+              <div class="architecture-step"><span class="step-number">01</span><span class="architecture-icon icon-blue"><i data-lucide="monitor-up"></i></span><strong>Secure upload</strong><p>The browser sends a supported document to the Flask API over HTTP.</p><span class="architecture-tag">Your browser</span></div>
+              <span class="flow-arrow"><i data-lucide="arrow-right"></i></span>
+              <div class="architecture-step"><span class="step-number">02</span><span class="architecture-icon icon-violet"><i data-lucide="server"></i></span><strong>Backend validation</strong><p>Flask checks file size, extension and file signature before processing.</p><span class="architecture-tag">Python · Flask</span></div>
+              <span class="flow-arrow"><i data-lucide="arrow-right"></i></span>
+              <div class="architecture-step cloud-step"><span class="step-number">03</span><span class="architecture-icon icon-cloud"><i data-lucide="brain-circuit"></i></span><strong>Google Document AI</strong><p>The Invoice Parser performs OCR and returns invoice entities with confidence scores.</p><span class="architecture-tag">Google Cloud</span></div>
+              <span class="flow-arrow"><i data-lucide="arrow-right"></i></span>
+              <div class="architecture-step"><span class="step-number">04</span><span class="architecture-icon icon-green"><i data-lucide="database"></i></span><strong>Structured results</strong><p>The response is normalized, saved to SQLite and displayed in the dashboard.</p><span class="architecture-tag">JSON · SQLite</span></div>
+            </div>
+            <div class="architecture-caption"><i data-lucide="shield-check"></i><span>Documents are sent directly from the backend to Document AI. No mock extraction or local OCR is used.</span></div>
+          </article>
+          <div class="integration-columns">
+            <article class="panel setup-panel"><div class="panel-heading"><div><h2>Configuration checklist</h2><p>Set up the cloud processor to enable live extraction</p></div></div>
+              <ol class="setup-list">
+                <li><span>1</span><div><strong>Create or select a Google Cloud project</strong><p>Enable billing for the project to use Document AI.</p></div></li>
+                <li><span>2</span><div><strong>Enable the Document AI API</strong><p>In the Cloud Console, enable <code>documentai.googleapis.com</code>.</p></div></li>
+                <li><span>3</span><div><strong>Create an Invoice Parser processor</strong><p>Choose your processor region and copy its processor ID.</p></div></li>
+                <li><span>4</span><div><strong>Configure Application Default Credentials</strong><p>Use a service account with Document AI API User permissions, or run <code>gcloud auth application-default login</code>.</p></div></li>
+                <li><span>5</span><div><strong>Set the environment variables</strong><p>Copy <code>.env.example</code> to <code>.env</code> and enter your project, region and processor ID.</p></div></li>
+              </ol>
+              <div class="env-preview"><div><span class="env-dot"></span><span class="env-dot"></span><span class="env-dot"></span><small>.env</small></div><pre>GOOGLE_CLOUD_PROJECT=your-project-id
+GOOGLE_CLOUD_LOCATION=us
+GOOGLE_CLOUD_PROCESSOR_ID=your-processor-id
+GOOGLE_APPLICATION_CREDENTIALS=C:\path\to\service-account.json</pre></div>
+            </article>
+            <article class="panel integration-info"><span class="info-icon"><i data-lucide="info"></i></span><h2>Data and privacy</h2><p>Uploaded files are stored locally for this project and are sent to Google Cloud Document AI for extraction. Extracted data and status metadata are stored in the local SQLite database. Deleting a document in the library removes its local file and record.</p><div class="divider"></div><div class="info-row"><i data-lucide="hard-drive"></i><span>Local storage</span><strong>SQLite + uploads folder</strong></div><div class="info-row"><i data-lucide="cloud"></i><span>AI processing</span><strong>Google Cloud Document AI</strong></div><div class="info-row"><i data-lucide="lock-keyhole"></i><span>Authentication</span><strong>Google ADC</strong></div></article>
+          </div>
+        </section>
+        <footer class="footer"><span>DocuMind <span class="footer-dot">•</span> Smart document processing</span><span>Powered by Google Cloud Document AI</span></footer>
+      </main>
+    </div>
+
+    <div class="modal-backdrop hidden" id="upload-modal" role="dialog" aria-modal="true" aria-labelledby="upload-title">
+      <div class="modal upload-modal">
+        <div class="modal-heading"><div><div class="eyebrow">DOCUMENT PROCESSING</div><h2 id="upload-title">Upload a document</h2><p>Choose an invoice PDF or image to process with AI.</p></div><button class="icon-button close-modal" aria-label="Close upload"><i data-lucide="x"></i></button></div>
+        <div class="dropzone" id="dropzone" tabindex="0">
+          <input type="file" id="file-input" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" hidden>
+          <div class="dropzone-icon"><i data-lucide="cloud-upload"></i></div>
+          <strong>Drop your document here</strong>
+          <span>or <button class="inline-link" type="button" id="browse-files">browse files</button> from your computer</span>
+          <small>PDF, PNG or JPG · Maximum file size 15 MB</small>
+        </div>
+        <div class="selected-file hidden" id="selected-file"></div>
+        <div class="file-preview hidden" id="file-preview"></div>
+        <div class="upload-error hidden" id="upload-error" role="alert"></div>
+        <div class="upload-progress hidden" id="upload-progress"><div class="progress-label"><span id="progress-label">Uploading and processing...</span><span id="progress-percent">0%</span></div><div class="progress-track"><span id="progress-bar"></span></div><small id="progress-detail">Waiting for OCR.space response</small></div>
+        <div class="modal-actions"><button class="button button-secondary close-modal">Cancel</button><button class="button button-primary" id="process-button" disabled><i data-lucide="sparkles"></i> Process with AI</button></div>
+      </div>
+    </div>
+
+    <div class="modal-backdrop hidden" id="results-modal" role="dialog" aria-modal="true" aria-labelledby="results-title">
+      <div class="modal results-modal">
+        <div class="modal-heading result-header"><div><div class="eyebrow">DOCUMENT DETAILS</div><h2 id="results-title">Processing results</h2><div class="result-meta" id="result-meta"></div></div><button class="icon-button close-results" aria-label="Close results"><i data-lucide="x"></i></button></div>
+        <div class="result-toolbar"><div class="result-tabs"><button class="result-tab active" data-result-tab="summary">Extracted data</button><button class="result-tab" data-result-tab="text">Full text</button></div><div class="result-actions"><button class="button button-quiet button-small" id="copy-text"><i data-lucide="copy"></i> Copy text</button><button class="button button-quiet button-small" id="download-text"><i data-lucide="file-down"></i> TXT</button><button class="button button-quiet button-small" id="download-csv"><i data-lucide="sheet"></i> CSV</button><button class="button button-quiet button-small" id="download-json"><i data-lucide="download"></i> JSON</button></div></div>
+        <div class="result-content" id="result-summary"></div>
+        <div class="result-content text-content hidden" id="result-text"></div>
+        <div class="result-error hidden" id="result-error"></div>
+      </div>
+    </div>
+    <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/assets/script.js"></script>
+  </body>
+</html>
