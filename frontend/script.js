@@ -139,31 +139,38 @@ function drawActivityChart(canvas, rows, empty) {
   const chartWidth = width - pad.left - pad.right;
   const chartHeight = height - pad.top - pad.bottom;
   const maximum = Math.max(4, ...dates.map((item) => item.count));
-  context.font = "9px DM Sans, sans-serif";
+  context.font = "11px 'Plus Jakarta Sans', sans-serif";
   context.textAlign = "right";
   context.textBaseline = "middle";
   for (let tick = 0; tick <= 3; tick += 1) {
     const y = pad.top + chartHeight - (chartHeight * tick / 3);
-    context.strokeStyle = "#edf0f5";
+    context.strokeStyle = "#e2e8f0";
     context.lineWidth = 1;
     context.beginPath();
     context.moveTo(pad.left, y);
     context.lineTo(width - pad.right, y);
     context.stroke();
-    context.fillStyle = "#a3adbc";
+    context.fillStyle = "#94a3b8";
     context.fillText(String(Math.round(maximum * tick / 3)), pad.left - 7, y);
   }
   const step = chartWidth / dates.length;
-  const barWidth = Math.min(24, step * .42);
+  const barWidth = Math.min(28, step * .48);
   dates.forEach((item, index) => {
     const x = pad.left + step * index + (step - barWidth) / 2;
-    const barHeight = item.count ? Math.max(3, chartHeight * item.count / maximum) : 0;
+    const barHeight = item.count ? Math.max(4, chartHeight * item.count / maximum) : 0;
     const y = pad.top + chartHeight - barHeight;
-    context.fillStyle = item.count ? "#718ee8" : "#eef1f7";
+    if (item.count) {
+      const grad = context.createLinearGradient(0, y, 0, pad.top + chartHeight);
+      grad.addColorStop(0, "#4f46e5");
+      grad.addColorStop(1, "#818cf8");
+      context.fillStyle = grad;
+    } else {
+      context.fillStyle = "#f1f5f9";
+    }
     context.beginPath();
-    context.roundRect(x, y, barWidth, Math.max(2, barHeight), 4);
+    context.roundRect(x, y, barWidth, Math.max(4, barHeight), 6);
     context.fill();
-    context.fillStyle = "#99a4b4";
+    context.fillStyle = "#64748b";
     context.textAlign = "center";
     context.textBaseline = "top";
     context.fillText(item.label, x + barWidth / 2, height - 18);
@@ -581,6 +588,13 @@ $("#copy-text").addEventListener("click", async () => {
   if (!text) return showToast("There is no extracted text to copy.", "error");
   try {
     await navigator.clipboard.writeText(text);
+    const origHtml = $("#copy-text").innerHTML;
+    $("#copy-text").innerHTML = '<i data-lucide="check"></i> Copied!';
+    refreshIcons();
+    window.setTimeout(() => {
+      $("#copy-text").innerHTML = origHtml;
+      refreshIcons();
+    }, 2000);
     showToast("Extracted text copied to clipboard.", "success");
   } catch {
     showToast("Clipboard access is unavailable in this browser.", "error");
