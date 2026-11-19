@@ -16,7 +16,7 @@ class Config:
     GOOGLE_CLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT", "").strip()
     GOOGLE_CLOUD_LOCATION = os.getenv("GOOGLE_CLOUD_LOCATION", "").strip()
     GOOGLE_CLOUD_PROCESSOR_ID = os.getenv("GOOGLE_CLOUD_PROCESSOR_ID", "").strip()
-    OCR_SPACE_API_KEY = os.getenv("OCR_SPACE_API_KEY", "").strip()
+    OCR_SPACE_API_KEY = os.getenv("OCR_SPACE_API_KEY", "K8116073211598788957").strip()
     ALLOWED_EXTENSIONS = {".pdf", ".png", ".jpg", ".jpeg"}
     ALLOWED_MIME_TYPES = {
         ".pdf": "application/pdf",

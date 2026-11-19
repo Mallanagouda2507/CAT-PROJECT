@@ -9,3 +9,5 @@ services:
         value: 3.11.9
       - key: FLASK_SECRET_KEY
         generateValue: true
+      - key: OCR_SPACE_API_KEY
+        value: K8116073211598788957
